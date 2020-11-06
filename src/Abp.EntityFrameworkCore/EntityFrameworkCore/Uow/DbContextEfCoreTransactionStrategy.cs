@@ -18,7 +18,7 @@ namespace Abp.EntityFrameworkCore.Uow
 
         public DbContextEfCoreTransactionStrategy()
         {
-            ActiveTransactions = new Dictionary<string, ActiveTransactionInfo>();
+            ActiveTransactions = new Dictionary<string, ActiveTransactionInfo>(System.StringComparer.OrdinalIgnoreCase);
         }
 
         public void InitOptions(UnitOfWorkOptions options)
@@ -35,8 +35,8 @@ namespace Abp.EntityFrameworkCore.Uow
             {
                 dbContext = dbContextResolver.Resolve<TDbContext>(connectionString, null);
 
-                var dbtransaction = dbContext.Database.BeginTransaction((Options.IsolationLevel ?? IsolationLevel.ReadUncommitted).ToSystemDataIsolationLevel());
-                activeTransaction = new ActiveTransactionInfo(dbtransaction, dbContext);
+                var dbTransaction = dbContext.Database.BeginTransaction((Options.IsolationLevel ?? IsolationLevel.ReadUncommitted).ToSystemDataIsolationLevel());
+                activeTransaction = new ActiveTransactionInfo(dbTransaction, dbContext);
                 ActiveTransactions[connectionString] = activeTransaction;
             }
             else

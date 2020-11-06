@@ -68,7 +68,7 @@ namespace Abp.EntityFrameworkCore
                 return contextType.GetConstructors().Any(ctor =>
                 {
                     var parameters = ctor.GetParameters();
-                    return parameters.Length == 1 && parameters.FirstOrDefault()?.Name == "options";
+                    return parameters.Length == 1 && string.Equals(parameters.FirstOrDefault()?.Name, "options", StringComparison.OrdinalIgnoreCase);
                 });
             }
         }

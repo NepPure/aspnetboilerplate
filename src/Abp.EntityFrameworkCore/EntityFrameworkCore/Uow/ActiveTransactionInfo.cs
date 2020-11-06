@@ -10,7 +10,7 @@ namespace Abp.EntityFrameworkCore.Uow
 
         public DbContext StarterDbContext { get; }
 
-        public List<DbContext> AttendedDbContexts { get; }
+        public IList<DbContext> AttendedDbContexts { get; }
 
         public ActiveTransactionInfo(IDbContextTransaction dbContextTransaction, DbContext starterDbContext)
         {

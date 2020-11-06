@@ -232,8 +232,8 @@ namespace Abp.EntityFrameworkCore
             try
             {
                 var changeReport = ApplyAbpConcepts();
-                var result = await base.SaveChangesAsync(cancellationToken);
-                await EntityChangeEventHelper.TriggerEventsAsync(changeReport);
+                var result = await base.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+                await EntityChangeEventHelper.TriggerEventsAsync(changeReport).ConfigureAwait(false);
                 return result;
             }
             catch (DbUpdateConcurrencyException ex)

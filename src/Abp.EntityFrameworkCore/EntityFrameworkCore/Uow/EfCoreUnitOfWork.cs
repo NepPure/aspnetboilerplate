@@ -44,7 +44,7 @@ namespace Abp.EntityFrameworkCore.Uow
             _dbContextTypeMatcher = dbContextTypeMatcher;
             _transactionStrategy = transactionStrategy;
 
-            ActiveDbContexts = new Dictionary<string, DbContext>();
+            ActiveDbContexts = new Dictionary<string, DbContext>(StringComparer.OrdinalIgnoreCase);
         }
 
         protected override void BeginUow()
@@ -67,7 +67,7 @@ namespace Abp.EntityFrameworkCore.Uow
         {
             foreach (var dbContext in GetAllActiveDbContexts())
             {
-                await SaveChangesInDbContextAsync(dbContext);
+                await SaveChangesInDbContextAsync(dbContext).ConfigureAwait(false);
             }
         }
 
@@ -79,7 +79,7 @@ namespace Abp.EntityFrameworkCore.Uow
 
         protected override async Task CompleteUowAsync()
         {
-            await SaveChangesAsync();
+            await SaveChangesAsync().ConfigureAwait(false);
             CommitTransaction();
         }
 
@@ -160,9 +160,9 @@ namespace Abp.EntityFrameworkCore.Uow
             dbContext.SaveChanges();
         }
 
-        protected virtual async Task SaveChangesInDbContextAsync(DbContext dbContext)
+        protected virtual Task SaveChangesInDbContextAsync(DbContext dbContext)
         {
-            await dbContext.SaveChangesAsync();
+            return dbContext.SaveChangesAsync();
         }
 
         protected virtual void Release(DbContext dbContext)
